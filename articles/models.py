@@ -4,7 +4,7 @@ from django.db import models
 
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-
+from cloudinary.models import CloudinaryField
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -36,10 +36,12 @@ class Article(models.Model):
 
     content = models.TextField()
 
-    image = models.ImageField(
-        upload_to='articles/',
-        blank=True,
-        null=True
+    image = CloudinaryField(
+    'image',
+    folder='articles',
+    blank=True,
+    null=True
+
     )
 
     author = models.ForeignKey(

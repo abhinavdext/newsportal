@@ -5,7 +5,7 @@ Django settings for newsportal project.
 from pathlib import Path
 import os
 import dj_database_url
-
+import cloudinary
 
 # ==========================================
 # BASE DIRECTORY
@@ -192,15 +192,24 @@ STATICFILES_STORAGE = (
     "whitenoise.storage.CompressedManifestStaticFilesStorage"
 )
 
-
 # ==========================================
 # MEDIA FILES
 # ==========================================
 
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "media"
 
+
+# ==========================================
+# CLOUDINARY
+# ==========================================
+
+CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
+
+if CLOUDINARY_URL:
+    cloudinary.config(
+        secure=True
+    )
 
 # ==========================================
 # EMAIL
