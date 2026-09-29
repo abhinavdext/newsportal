@@ -34,6 +34,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     ".onrender.com",
+    "newsportal-2711.onrender.com",
 ]
 
 
@@ -215,7 +216,8 @@ EMAIL_BACKEND = (
 # ==========================================
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com",
+    'https://*.vercel.app',
+    'https://newsportal-2711.onrender.com',
 ]
 
 
