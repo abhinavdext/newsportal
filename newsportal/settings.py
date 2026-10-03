@@ -179,13 +179,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # ==========================================
 # STATIC FILES
 # ==========================================
 
 STATIC_URL = "/static/"
 
+# Custom static folder
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+# Collected static files for production
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = (
