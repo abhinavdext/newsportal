@@ -764,20 +764,13 @@ function startDonation() {
     const amountInput = document.getElementById("donationAmount");
     const amount = Number(amountInput.value);
 
-    // Amount validation
+    // Check amount
     if (!amount || amount <= 0) {
         alert("Please select or enter a donation amount.");
         amountInput.focus();
         return;
     }
 
-    if (amount < 1) {
-        alert("Donation amount must be at least ₹1.");
-        amountInput.focus();
-        return;
-    }
-
-    // Your UPI details
     const upiId = "abhnav.30pandey@oksbi";
     const payeeName = "Exato Foundation";
     const note = "Donation to Exato Foundation";
@@ -791,22 +784,27 @@ function startDonation() {
         "&cu=INR" +
         "&tn=" + encodeURIComponent(note);
 
-    // Try to open UPI application
-    window.location.assign(upiUrl);
+    // Create temporary UPI link
+    const link = document.createElement("a");
 
-    // Fallback message
+    link.href = upiUrl;
+    link.innerHTML = "Pay";
+
+    // Keep link hidden
+    link.style.display = "none";
+
+    document.body.appendChild(link);
+
+    // Open UPI application
+    link.click();
+
+    // Remove temporary link
     setTimeout(function () {
-
-        alert(
-            "If your UPI app did not open automatically:\n\n" +
-            "UPI ID: " + upiId +
-            "\nAmount: ₹" + amount.toLocaleString("en-IN") +
-            "\n\nPlease scan the QR code or pay using the UPI ID."
-        );
-
-    }, 2000);
+        document.body.removeChild(link);
+    }, 1000);
 }
 ```
+
 </script>
 
 {% endblock %}
