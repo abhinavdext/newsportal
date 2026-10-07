@@ -379,9 +379,7 @@ Donate | Exato Foundation
 
     <div class="donate-container">
 
-        <!-- =========================
-             HERO SECTION
-        ========================== -->
+        <!-- HERO -->
 
         <section class="donate-hero">
 
@@ -402,9 +400,7 @@ Donate | Exato Foundation
         </section>
 
 
-        <!-- =========================
-             DONATION SECTION
-        ========================== -->
+        <!-- DONATION SECTION -->
 
         <section class="donate-grid">
 
@@ -475,6 +471,7 @@ Donate | Exato Foundation
                     class="amount-input"
                     placeholder="Enter amount in ₹"
                     min="1"
+                    step="1"
                     inputmode="numeric">
 
 
@@ -483,13 +480,13 @@ Donate | Exato Foundation
                     class="donate-button"
                     onclick="startDonation()">
 
-                    ❤️ Donate Now
+                    💳 Pay ₹ via UPI
 
                 </button>
 
 
                 <div class="secure-text">
-                    🔒 Your support helps Exato Foundation continue its work.
+                    🔒 You will be redirected to your UPI app to complete the payment.
                 </div>
 
             </div>
@@ -537,9 +534,7 @@ Donate | Exato Foundation
         </section>
 
 
-        <!-- =========================
-             HOW DONATION HELPS
-        ========================== -->
+        <!-- HOW DONATION HELPS -->
 
         <section class="help-section">
 
@@ -599,9 +594,7 @@ Donate | Exato Foundation
         </section>
 
 
-        <!-- =========================
-             IMPACT SECTION
-        ========================== -->
+        <!-- IMPACT -->
 
         <section class="impact-section">
 
@@ -660,9 +653,7 @@ Donate | Exato Foundation
         </section>
 
 
-        <!-- =========================
-             THANK YOU
-        ========================== -->
+        <!-- THANK YOU -->
 
         <section class="thank-you">
 
@@ -681,9 +672,7 @@ Donate | Exato Foundation
 </div>
 
 
-<!-- =========================
-     JAVASCRIPT
-========================== -->
+<!-- JAVASCRIPT -->
 
 <script>
 
@@ -698,8 +687,48 @@ function selectAmount(amount, button) {
     });
 
     button.classList.add("active");
+
+    updateDonateButton(amount);
 }
 
+
+function updateDonateButton(amount) {
+
+    const donateButton = document.querySelector(".donate-button");
+
+    if (donateButton && amount) {
+        donateButton.innerHTML = "💳 Pay ₹" + Number(amount).toLocaleString("en-IN") + " via UPI";
+    }
+}
+
+
+/* CUSTOM AMOUNT CHANGE */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const amountInput = document.getElementById("donationAmount");
+
+    amountInput.addEventListener("input", function() {
+
+        const amount = Number(this.value);
+
+        document.querySelectorAll(".amount-btn").forEach(function(btn) {
+            btn.classList.remove("active");
+        });
+
+        if (amount > 0) {
+            updateDonateButton(amount);
+        } else {
+            document.querySelector(".donate-button").innerHTML =
+                "💳 Pay ₹ via UPI";
+        }
+
+    });
+
+});
+
+
+/* COPY UPI */
 
 function copyUPI() {
 
@@ -710,7 +739,7 @@ function copyUPI() {
         navigator.clipboard.writeText(upi)
             .then(function() {
 
-                alert("UPI ID copied successfully ❤️");
+                alert("UPI ID copied successfully ❤️\n\n" + upi);
 
             })
             .catch(function() {
@@ -727,16 +756,36 @@ function copyUPI() {
 }
 
 
+/* START UPI PAYMENT */
+
 function startDonation() {
 
     const amountInput = document.getElementById("donationAmount");
 
-    const amount = amountInput.value;
+    const amount = Number(amountInput.value);
 
 
-    if (!amount || Number(amount) <= 0) {
+    /* VALIDATION */
 
-        alert("Please select or enter a donation amount.");
+    if (!amount || amount <= 0) {
+
+        alert(
+            "Please select or enter a donation amount."
+        );
+
+        amountInput.focus();
+
+        return;
+    }
+
+
+    /* MINIMUM AMOUNT */
+
+    if (amount < 1) {
+
+        alert(
+            "Donation amount must be at least ₹1."
+        );
 
         amountInput.focus();
 
@@ -745,18 +794,31 @@ function startDonation() {
 
 
     /*
-       Payment gateway baad me connect karenge.
+        UPI PAYMENT LINK
 
-       Filhaal user ko QR code se payment
-       complete karne ke liye guide kiya jayega.
+        pa = UPI ID
+        pn = Payee Name
+        am = Donation Amount
+        cu = Currency
+        tn = Transaction Note
     */
 
-    alert(
-        "Thank you for supporting Exato Foundation ❤️\n\n" +
-        "Donation Amount: ₹" + amount +
-        "\n\n" +
-        "Please scan the UPI QR code to complete your donation."
-    );
+    const upiUrl =
+        "upi://pay" +
+        "?pa=" + encodeURIComponent("abhnav.30pandey@oksbi") +
+        "&pn=" + encodeURIComponent("Exato Foundation") +
+        "&am=" + encodeURIComponent(amount.toFixed(2)) +
+        "&cu=INR" +
+        "&tn=" + encodeURIComponent("Donation to Exato Foundation");
+
+
+    /*
+        Android phone par compatible UPI app
+        open karne ki koshish karega.
+    */
+
+    window.location.href = upiUrl;
+
 }
 
 </script>
