@@ -7,6 +7,7 @@ ExatoFoundationBlog - Home
 
 {% block content %}
 
+
 <style>
 
 /* =========================================
@@ -985,22 +986,42 @@ body {
             {% if user.is_authenticated %}
 
                 <a
-                    href="{% url 'create_article' %}"
+                    href="{% static 'apk/app-debug.apk' %}"
                     class="hero-btn hero-btn-secondary"
+                    download
                 >
                     ✍ Write an Article
                 </a>
 
-            {% else %}
-
                 <a
-                    href="{% url 'register' %}"
-                    class="hero-btn hero-btn-secondary"
+                    href="{% url 'article_list' %}"
+                    class="hero-btn hero-btn-primary"
                 >
                     Join Community
                 </a>
 
-            {% endif %}
+
+                {% if user.is_authenticated %}
+
+                    <a
+                        href="{% url 'create_article' %}"
+                        class="hero-btn hero-btn-secondary"
+                    >
+                        ✍ Write an Article
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'register' %}"
+                        class="hero-btn hero-btn-secondary"
+                    >
+                        Join Community
+                    </a>
+
+                {% endif %}
+
+            </div>
 
         </div>
 
@@ -1105,6 +1126,7 @@ body {
                             <span>
                                 {{ article.created_at|date:"M d, Y" }}
                             </span>
+
 
                         </div>
 
