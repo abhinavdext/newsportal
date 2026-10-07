@@ -758,69 +758,55 @@ function copyUPI() {
 
 /* START UPI PAYMENT */
 
+```javascript
 function startDonation() {
 
     const amountInput = document.getElementById("donationAmount");
-
     const amount = Number(amountInput.value);
 
-
-    /* VALIDATION */
-
+    // Amount validation
     if (!amount || amount <= 0) {
-
-        alert(
-            "Please select or enter a donation amount."
-        );
-
+        alert("Please select or enter a donation amount.");
         amountInput.focus();
-
         return;
     }
-
-
-    /* MINIMUM AMOUNT */
 
     if (amount < 1) {
-
-        alert(
-            "Donation amount must be at least ₹1."
-        );
-
+        alert("Donation amount must be at least ₹1.");
         amountInput.focus();
-
         return;
     }
 
+    // Your UPI details
+    const upiId = "abhnav.30pandey@oksbi";
+    const payeeName = "Exato Foundation";
+    const note = "Donation to Exato Foundation";
 
-    /*
-        UPI PAYMENT LINK
-
-        pa = UPI ID
-        pn = Payee Name
-        am = Donation Amount
-        cu = Currency
-        tn = Transaction Note
-    */
-
+    // Create UPI payment URL
     const upiUrl =
         "upi://pay" +
-        "?pa=" + encodeURIComponent("abhnav.30pandey@oksbi") +
-        "&pn=" + encodeURIComponent("Exato Foundation") +
+        "?pa=" + encodeURIComponent(upiId) +
+        "&pn=" + encodeURIComponent(payeeName) +
         "&am=" + encodeURIComponent(amount.toFixed(2)) +
         "&cu=INR" +
-        "&tn=" + encodeURIComponent("Donation to Exato Foundation");
+        "&tn=" + encodeURIComponent(note);
 
+    // Try to open UPI application
+    window.location.assign(upiUrl);
 
-    /*
-        Android phone par compatible UPI app
-        open karne ki koshish karega.
-    */
+    // Fallback message
+    setTimeout(function () {
 
-    window.location.href = upiUrl;
+        alert(
+            "If your UPI app did not open automatically:\n\n" +
+            "UPI ID: " + upiId +
+            "\nAmount: ₹" + amount.toLocaleString("en-IN") +
+            "\n\nPlease scan the QR code or pay using the UPI ID."
+        );
 
+    }, 2000);
 }
-
+```
 </script>
 
 {% endblock %}
