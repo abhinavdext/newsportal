@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from articles.models import Article
 
+
 def home(request):
 
     latest_articles = Article.objects.filter(
@@ -15,4 +16,12 @@ def home(request):
         {
             'latest_articles': latest_articles,
         }
+    )
+
+
+def donate(request):
+
+    return render(
+        request,
+        'donate.html'
     )

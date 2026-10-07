@@ -1,0 +1,764 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Donate | Exato Foundation
+{% endblock %}
+
+{% block content %}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .donate-page {
+        min-height: 100vh;
+        padding: 40px 15px 70px;
+        background:
+            radial-gradient(circle at 10% 10%, rgba(255, 193, 7, 0.18), transparent 30%),
+            radial-gradient(circle at 90% 20%, rgba(25, 135, 84, 0.15), transparent 30%),
+            linear-gradient(135deg, #f8fbff, #eef7f2);
+    }
+
+    .donate-container {
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    /* HERO */
+
+    .donate-hero {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .heart-icon {
+        width: 78px;
+        height: 78px;
+        margin: auto;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+        font-size: 40px;
+    }
+
+    .donate-hero h1 {
+        margin: 20px 0 10px;
+        font-size: clamp(30px, 6vw, 52px);
+        font-weight: 800;
+        color: #12372a;
+    }
+
+    .donate-hero p {
+        max-width: 700px;
+        margin: auto;
+        font-size: 17px;
+        line-height: 1.7;
+        color: #5f6b66;
+    }
+
+    /* MAIN GRID */
+
+    .donate-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 25px;
+        align-items: stretch;
+    }
+
+    .donate-card {
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .donate-card h2 {
+        margin-top: 0;
+        color: #12372a;
+        font-size: 28px;
+    }
+
+    .donate-card > p {
+        color: #68736e;
+        line-height: 1.6;
+    }
+
+    /* AMOUNTS */
+
+    .amount-title {
+        font-weight: 700;
+        margin: 25px 0 12px;
+        color: #26332e;
+    }
+
+    .amounts {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+    .amount-btn {
+        border: 2px solid #dce8e1;
+        background: #ffffff;
+        color: #164b36;
+        padding: 13px 8px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .amount-btn:hover,
+    .amount-btn.active {
+        background: #198754;
+        color: #ffffff;
+        border-color: #198754;
+        transform: translateY(-2px);
+    }
+
+    /* INPUT */
+
+    .custom-label {
+        display: block;
+        margin: 22px 0 8px;
+        font-weight: 700;
+        color: #26332e;
+    }
+
+    .amount-input {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #dce8e1;
+        border-radius: 12px;
+        font-size: 17px;
+        outline: none;
+    }
+
+    .amount-input:focus {
+        border-color: #198754;
+    }
+
+    /* DONATE BUTTON */
+
+    .donate-button {
+        width: 100%;
+        margin-top: 22px;
+        padding: 16px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #198754, #11683f);
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(25, 135, 84, 0.25);
+        transition: 0.2s;
+    }
+
+    .donate-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(25, 135, 84, 0.35);
+    }
+
+    .secure-text {
+        text-align: center;
+        margin-top: 13px;
+        font-size: 13px;
+        color: #77827d;
+    }
+
+    /* QR */
+
+    .qr-card {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .qr-card h2 {
+        margin-bottom: 8px;
+    }
+
+    .qr-box {
+        width: 260px;
+        height: 260px;
+        margin: 20px auto;
+        border-radius: 18px;
+        background: #ffffff;
+        border: 2px solid #e1e8e4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .qr-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 8px;
+    }
+
+    .upi-id {
+        background: #f0f7f3;
+        padding: 14px;
+        border-radius: 12px;
+        font-weight: 700;
+        color: #16653f;
+        word-break: break-word;
+        border: 1px solid #d8e9df;
+    }
+
+    .copy-button {
+        width: 100%;
+        margin-top: 12px;
+        padding: 13px;
+        border: 2px solid #198754;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #198754;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .copy-button:hover {
+        background: #198754;
+        color: #ffffff;
+    }
+
+    /* HELP */
+
+    .help-section {
+        margin-top: 30px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .help-card {
+        background: #ffffff;
+        padding: 25px 20px;
+        border-radius: 18px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .help-card .icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .help-card h3 {
+        margin: 5px 0 8px;
+        color: #12372a;
+    }
+
+    .help-card p {
+        margin: 0;
+        color: #6b756f;
+        line-height: 1.5;
+        font-size: 14px;
+    }
+
+    /* IMPACT */
+
+    .impact-section {
+        margin-top: 35px;
+        background: linear-gradient(135deg, #12372a, #198754);
+        color: #ffffff;
+        padding: 35px 25px;
+        border-radius: 24px;
+        text-align: center;
+    }
+
+    .impact-section h2 {
+        margin-top: 0;
+        font-size: 30px;
+    }
+
+    .impact-section p {
+        max-width: 650px;
+        margin: 0 auto 25px;
+        line-height: 1.6;
+        opacity: 0.9;
+    }
+
+    .impact-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .stat {
+        padding: 15px;
+    }
+
+    .stat-number {
+        display: block;
+        font-size: 32px;
+        font-weight: 800;
+    }
+
+    .stat-label {
+        display: block;
+        margin-top: 5px;
+        opacity: 0.85;
+    }
+
+    /* THANK YOU */
+
+    .thank-you {
+        text-align: center;
+        margin-top: 35px;
+    }
+
+    .thank-you h2 {
+        color: #12372a;
+        margin-bottom: 8px;
+    }
+
+    .thank-you p {
+        color: #68736e;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 800px) {
+
+        .donate-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .help-section {
+            grid-template-columns: 1fr;
+        }
+
+        .amounts {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .impact-stats {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .donate-page {
+            padding: 25px 10px 50px;
+        }
+
+        .donate-card {
+            padding: 22px 18px;
+        }
+
+        .donate-hero h1 {
+            font-size: 32px;
+        }
+
+        .qr-box {
+            width: 220px;
+            height: 220px;
+        }
+    }
+</style>
+
+
+<div class="donate-page">
+
+    <div class="donate-container">
+
+        <!-- =========================
+             HERO SECTION
+        ========================== -->
+
+        <section class="donate-hero">
+
+            <div class="heart-icon">
+                ❤️
+            </div>
+
+            <h1>
+                Support Exato Foundation
+            </h1>
+
+            <p>
+                Your small contribution can make a meaningful difference.
+                Help us continue our educational, social and community
+                development initiatives.
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             DONATION SECTION
+        ========================== -->
+
+        <section class="donate-grid">
+
+            <!-- LEFT CARD -->
+
+            <div class="donate-card">
+
+                <h2>
+                    ❤️ Donate Now
+                </h2>
+
+                <p>
+                    Choose an amount that you would like to contribute.
+                    Every contribution matters.
+                </p>
+
+
+                <div class="amount-title">
+                    Select Donation Amount
+                </div>
+
+
+                <div class="amounts">
+
+                    <button
+                        type="button"
+                        class="amount-btn"
+                        onclick="selectAmount(100, this)">
+                        ₹100
+                    </button>
+
+                    <button
+                        type="button"
+                        class="amount-btn"
+                        onclick="selectAmount(500, this)">
+                        ₹500
+                    </button>
+
+                    <button
+                        type="button"
+                        class="amount-btn"
+                        onclick="selectAmount(1000, this)">
+                        ₹1,000
+                    </button>
+
+                    <button
+                        type="button"
+                        class="amount-btn"
+                        onclick="selectAmount(5000, this)">
+                        ₹5,000
+                    </button>
+
+                </div>
+
+
+                <label
+                    class="custom-label"
+                    for="donationAmount">
+
+                    Custom Amount
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="donationAmount"
+                    class="amount-input"
+                    placeholder="Enter amount in ₹"
+                    min="1"
+                    inputmode="numeric">
+
+
+                <button
+                    type="button"
+                    class="donate-button"
+                    onclick="startDonation()">
+
+                    ❤️ Donate Now
+
+                </button>
+
+
+                <div class="secure-text">
+                    🔒 Your support helps Exato Foundation continue its work.
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT CARD - QR -->
+
+            <div class="donate-card qr-card">
+
+                <h2>
+                    📱 Donate Using UPI
+                </h2>
+
+                <p>
+                    Scan the QR code using any UPI app such as
+                    Google Pay, PhonePe, Paytm or BHIM.
+                </p>
+
+
+                <div class="qr-box">
+
+                    <img
+                        src="{% static 'images/donation-qr.png' %}"
+                        alt="Exato Foundation UPI Donation QR Code">
+
+                </div>
+
+
+                <div class="upi-id">
+                    UPI ID: abhnav.30pandey@oksbi
+                </div>
+
+
+                <button
+                    type="button"
+                    class="copy-button"
+                    onclick="copyUPI()">
+
+                    📋 Copy UPI ID
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             HOW DONATION HELPS
+        ========================== -->
+
+        <section class="help-section">
+
+            <div class="help-card">
+
+                <div class="icon">
+                    📚
+                </div>
+
+                <h3>
+                    Education
+                </h3>
+
+                <p>
+                    Support educational activities and learning
+                    opportunities for children.
+                </p>
+
+            </div>
+
+
+            <div class="help-card">
+
+                <div class="icon">
+                    🎓
+                </div>
+
+                <h3>
+                    Learning
+                </h3>
+
+                <p>
+                    Help provide resources and opportunities
+                    for students and learners.
+                </p>
+
+            </div>
+
+
+            <div class="help-card">
+
+                <div class="icon">
+                    🤝
+                </div>
+
+                <h3>
+                    Community
+                </h3>
+
+                <p>
+                    Support community development and
+                    social initiatives.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             IMPACT SECTION
+        ========================== -->
+
+        <section class="impact-section">
+
+            <h2>
+                Every Contribution Matters ❤️
+            </h2>
+
+            <p>
+                Together, we can create more opportunities,
+                support education and build a stronger community.
+            </p>
+
+
+            <div class="impact-stats">
+
+                <div class="stat">
+
+                    <span class="stat-number">
+                        500+
+                    </span>
+
+                    <span class="stat-label">
+                        People Reached
+                    </span>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <span class="stat-number">
+                        25+
+                    </span>
+
+                    <span class="stat-label">
+                        Programs
+                    </span>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <span class="stat-number">
+                        40+
+                    </span>
+
+                    <span class="stat-label">
+                        Events
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             THANK YOU
+        ========================== -->
+
+        <section class="thank-you">
+
+            <h2>
+                Thank You for Supporting Us ❤️
+            </h2>
+
+            <p>
+                Your kindness and support help us continue our mission.
+            </p>
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
+
+<script>
+
+function selectAmount(amount, button) {
+
+    document.getElementById("donationAmount").value = amount;
+
+    const buttons = document.querySelectorAll(".amount-btn");
+
+    buttons.forEach(function(btn) {
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+}
+
+
+function copyUPI() {
+
+    const upi = "abhnav.30pandey@oksbi";
+
+    if (navigator.clipboard) {
+
+        navigator.clipboard.writeText(upi)
+            .then(function() {
+
+                alert("UPI ID copied successfully ❤️");
+
+            })
+            .catch(function() {
+
+                alert("UPI ID: " + upi);
+
+            });
+
+    } else {
+
+        alert("UPI ID: " + upi);
+
+    }
+}
+
+
+function startDonation() {
+
+    const amountInput = document.getElementById("donationAmount");
+
+    const amount = amountInput.value;
+
+
+    if (!amount || Number(amount) <= 0) {
+
+        alert("Please select or enter a donation amount.");
+
+        amountInput.focus();
+
+        return;
+    }
+
+
+    /*
+       Payment gateway baad me connect karenge.
+
+       Filhaal user ko QR code se payment
+       complete karne ke liye guide kiya jayega.
+    */
+
+    alert(
+        "Thank you for supporting Exato Foundation ❤️\n\n" +
+        "Donation Amount: ₹" + amount +
+        "\n\n" +
+        "Please scan the UPI QR code to complete your donation."
+    );
+}
+
+</script>
+
+{% endblock %}
