@@ -917,7 +917,6 @@ body {
 
 <div class="home-page">
 
-```
 <!-- Background -->
 <div class="background-grid"></div>
 <div class="bg-blob bg-blob-one"></div>
@@ -986,42 +985,22 @@ body {
             {% if user.is_authenticated %}
 
                 <a
-                    href="{% static 'apk/app-debug.apk' %}"
+                    href="{% url 'create_article' %}"
                     class="hero-btn hero-btn-secondary"
-                    download
                 >
                     ✍ Write an Article
                 </a>
 
+            {% else %}
+
                 <a
-                    href="{% url 'article_list' %}"
-                    class="hero-btn hero-btn-primary"
+                    href="{% url 'register' %}"
+                    class="hero-btn hero-btn-secondary"
                 >
                     Join Community
                 </a>
 
-
-                {% if user.is_authenticated %}
-
-                    <a
-                        href="{% url 'create_article' %}"
-                        class="hero-btn hero-btn-secondary"
-                    >
-                        ✍ Write an Article
-                    </a>
-
-                {% else %}
-
-                    <a
-                        href="{% url 'register' %}"
-                        class="hero-btn hero-btn-secondary"
-                    >
-                        Join Community
-                    </a>
-
-                {% endif %}
-
-            </div>
+            {% endif %}
 
         </div>
 
@@ -1213,7 +1192,6 @@ body {
     </span>
 
 </a>
-```
 
 </div>
 
