@@ -1,3 +1,4 @@
+```html
 {% extends "base.html" %}
 {% load static %}
 
@@ -25,8 +26,6 @@ Donate | Exato Foundation
         max-width: 1100px;
         margin: auto;
     }
-
-    /* HERO */
 
     .donate-hero {
         text-align: center;
@@ -61,8 +60,6 @@ Donate | Exato Foundation
         color: #5f6b66;
     }
 
-    /* MAIN GRID */
-
     .donate-grid {
         display: grid;
         grid-template-columns: 1.15fr 0.85fr;
@@ -88,8 +85,6 @@ Donate | Exato Foundation
         color: #68736e;
         line-height: 1.6;
     }
-
-    /* AMOUNTS */
 
     .amount-title {
         font-weight: 700;
@@ -123,8 +118,6 @@ Donate | Exato Foundation
         transform: translateY(-2px);
     }
 
-    /* INPUT */
-
     .custom-label {
         display: block;
         margin: 22px 0 8px;
@@ -145,19 +138,26 @@ Donate | Exato Foundation
         border-color: #198754;
     }
 
-    /* DONATE BUTTON */
+    /*
+    ========================================
+    MAIN UPI BUTTON
+    ========================================
+    */
 
     .donate-button {
         width: 100%;
+        display: block;
         margin-top: 22px;
         padding: 16px;
         border: none;
         border-radius: 14px;
         background: linear-gradient(135deg, #198754, #11683f);
-        color: #ffffff;
+        color: #ffffff !important;
         font-size: 18px;
         font-weight: 800;
         cursor: pointer;
+        text-align: center;
+        text-decoration: none;
         box-shadow: 0 8px 20px rgba(25, 135, 84, 0.25);
         transition: 0.2s;
     }
@@ -174,7 +174,48 @@ Donate | Exato Foundation
         color: #77827d;
     }
 
-    /* QR */
+    /*
+    ========================================
+    UPI APP BUTTONS
+    ========================================
+    */
+
+    .upi-app-title {
+        text-align: center;
+        margin-top: 25px;
+        margin-bottom: 12px;
+        font-weight: 700;
+        color: #26332e;
+    }
+
+    .upi-app-buttons {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .upi-app-btn {
+        border: 1px solid #dce8e1;
+        background: #ffffff;
+        border-radius: 10px;
+        padding: 10px 5px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #164b36;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .upi-app-btn:hover {
+        background: #f0f7f3;
+        border-color: #198754;
+    }
+
+    /*
+    ========================================
+    QR
+    ========================================
+    */
 
     .qr-card {
         text-align: center;
@@ -237,7 +278,11 @@ Donate | Exato Foundation
         color: #ffffff;
     }
 
-    /* HELP */
+    /*
+    ========================================
+    HELP
+    ========================================
+    */
 
     .help-section {
         margin-top: 30px;
@@ -271,7 +316,11 @@ Donate | Exato Foundation
         font-size: 14px;
     }
 
-    /* IMPACT */
+    /*
+    ========================================
+    IMPACT
+    ========================================
+    */
 
     .impact-section {
         margin-top: 35px;
@@ -316,8 +365,6 @@ Donate | Exato Foundation
         opacity: 0.85;
     }
 
-    /* THANK YOU */
-
     .thank-you {
         text-align: center;
         margin-top: 35px;
@@ -332,7 +379,11 @@ Donate | Exato Foundation
         color: #68736e;
     }
 
-    /* MOBILE */
+    /*
+    ========================================
+    MOBILE
+    ========================================
+    */
 
     @media (max-width: 800px) {
 
@@ -350,6 +401,10 @@ Donate | Exato Foundation
 
         .impact-stats {
             grid-template-columns: 1fr;
+        }
+
+        .upi-app-buttons {
+            grid-template-columns: repeat(3, 1fr);
         }
     }
 
@@ -370,6 +425,10 @@ Donate | Exato Foundation
         .qr-box {
             width: 220px;
             height: 220px;
+        }
+
+        .upi-app-buttons {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -475,8 +534,11 @@ Donate | Exato Foundation
                     inputmode="numeric">
 
 
+                <!-- MAIN DONATE BUTTON -->
+
                 <button
                     type="button"
+                    id="donateButton"
                     class="donate-button"
                     onclick="startDonation()">
 
@@ -486,13 +548,51 @@ Donate | Exato Foundation
 
 
                 <div class="secure-text">
-                    🔒 You will be redirected to your UPI app to complete the payment.
+                    🔒 Secure UPI payment. Your payment is completed in your UPI app.
+                </div>
+
+
+                <!-- UPI APP BUTTONS -->
+
+                <div class="upi-app-title">
+                    Or choose your UPI app
+                </div>
+
+                <div class="upi-app-buttons">
+
+                    <button
+                        type="button"
+                        class="upi-app-btn"
+                        onclick="payWithUPI('gpay')">
+
+                        🟢 Google Pay
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="upi-app-btn"
+                        onclick="payWithUPI('phonepe')">
+
+                        🟣 PhonePe
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="upi-app-btn"
+                        onclick="payWithUPI('paytm')">
+
+                        🔵 Paytm
+
+                    </button>
+
                 </div>
 
             </div>
 
 
-            <!-- RIGHT CARD - QR -->
+            <!-- RIGHT CARD -->
 
             <div class="donate-card qr-card">
 
@@ -672,17 +772,32 @@ Donate | Exato Foundation
 </div>
 
 
-<!-- JAVASCRIPT -->
-
 <script>
+
+/*
+====================================================
+UPI CONFIGURATION
+====================================================
+*/
+
+const UPI_ID = "abhnav.30pandey@oksbi";
+const PAYEE_NAME = "Exato Foundation";
+const PAYMENT_NOTE = "Donation to Exato Foundation";
+
+
+/*
+====================================================
+SELECT AMOUNT
+====================================================
+*/
 
 function selectAmount(amount, button) {
 
-    document.getElementById("donationAmount").value = amount;
+    const input = document.getElementById("donationAmount");
 
-    const buttons = document.querySelectorAll(".amount-btn");
+    input.value = amount;
 
-    buttons.forEach(function(btn) {
+    document.querySelectorAll(".amount-btn").forEach(function(btn) {
         btn.classList.remove("active");
     });
 
@@ -692,23 +807,51 @@ function selectAmount(amount, button) {
 }
 
 
+/*
+====================================================
+UPDATE BUTTON TEXT
+====================================================
+*/
+
 function updateDonateButton(amount) {
 
-    const donateButton = document.querySelector(".donate-button");
+    const button = document.getElementById("donateButton");
 
-    if (donateButton && amount) {
-        donateButton.innerHTML = "💳 Pay ₹" + Number(amount).toLocaleString("en-IN") + " via UPI";
+    if (!button) {
+        return;
+    }
+
+    if (amount && Number(amount) > 0) {
+
+        button.innerHTML =
+            "💳 Pay ₹" +
+            Number(amount).toLocaleString("en-IN") +
+            " via UPI";
+
+    } else {
+
+        button.innerHTML =
+            "💳 Pay ₹ via UPI";
+
     }
 }
 
 
-/* CUSTOM AMOUNT CHANGE */
+/*
+====================================================
+CUSTOM AMOUNT
+====================================================
+*/
 
 document.addEventListener("DOMContentLoaded", function() {
 
-    const amountInput = document.getElementById("donationAmount");
+    const input = document.getElementById("donationAmount");
 
-    amountInput.addEventListener("input", function() {
+    if (!input) {
+        return;
+    }
+
+    input.addEventListener("input", function() {
 
         const amount = Number(this.value);
 
@@ -719,8 +862,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (amount > 0) {
             updateDonateButton(amount);
         } else {
-            document.querySelector(".donate-button").innerHTML =
-                "💳 Pay ₹ via UPI";
+            updateDonateButton(0);
         }
 
     });
@@ -728,83 +870,211 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-/* COPY UPI */
+/*
+====================================================
+CREATE UPI PAYMENT URL
+====================================================
+*/
+
+function createUPIUrl(amount) {
+
+    return (
+        "upi://pay" +
+        "?pa=" + encodeURIComponent(UPI_ID) +
+        "&pn=" + encodeURIComponent(PAYEE_NAME) +
+        "&am=" + encodeURIComponent(Number(amount).toFixed(2)) +
+        "&cu=INR" +
+        "&tn=" + encodeURIComponent(PAYMENT_NOTE)
+    );
+
+}
+
+
+/*
+====================================================
+MAIN DONATE BUTTON
+====================================================
+*/
+
+function startDonation() {
+
+    const input = document.getElementById("donationAmount");
+
+    const amount = Number(input.value);
+
+    if (!amount || amount <= 0) {
+
+        alert(
+            "Please select or enter a donation amount."
+        );
+
+        input.focus();
+
+        return;
+    }
+
+
+    if (amount < 1) {
+
+        alert(
+            "Donation amount must be at least ₹1."
+        );
+
+        input.focus();
+
+        return;
+    }
+
+
+    const upiUrl = createUPIUrl(amount);
+
+
+    /*
+    ================================================
+    FIRST METHOD
+    Direct UPI URL navigation
+    ================================================
+    */
+
+    window.location.href = upiUrl;
+
+
+    /*
+    ================================================
+    FALLBACK
+    ================================================
+    */
+
+    setTimeout(function() {
+
+        showUPIFallback(amount);
+
+    }, 1800);
+
+}
+
+
+/*
+====================================================
+UPI APP FALLBACK
+====================================================
+*/
+
+function showUPIFallback(amount) {
+
+    const message =
+        "UPI app could not be opened automatically.\n\n" +
+        "Amount: ₹" + Number(amount).toLocaleString("en-IN") +
+        "\nUPI ID: " + UPI_ID +
+        "\n\n" +
+        "Please scan the QR code or copy the UPI ID.";
+
+    alert(message);
+
+}
+
+
+/*
+====================================================
+GOOGLE PAY
+====================================================
+*/
+
+function payWithUPI(app) {
+
+    const input = document.getElementById("donationAmount");
+
+    const amount = Number(input.value);
+
+    if (!amount || amount <= 0) {
+
+        alert(
+            "Please select or enter a donation amount first."
+        );
+
+        input.focus();
+
+        return;
+    }
+
+
+    const upiUrl = createUPIUrl(amount);
+
+
+    /*
+    Google Pay / PhonePe / Paytm
+    all support standard UPI payment
+    */
+
+    if (app === "gpay") {
+
+        window.location.href = upiUrl;
+
+        return;
+    }
+
+
+    if (app === "phonepe") {
+
+        window.location.href = upiUrl;
+
+        return;
+    }
+
+
+    if (app === "paytm") {
+
+        window.location.href = upiUrl;
+
+        return;
+    }
+
+}
+
+
+/*
+====================================================
+COPY UPI ID
+====================================================
+*/
 
 function copyUPI() {
 
-    const upi = "abhnav.30pandey@oksbi";
+    const upi = UPI_ID;
 
-    if (navigator.clipboard) {
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
 
         navigator.clipboard.writeText(upi)
             .then(function() {
 
-                alert("UPI ID copied successfully ❤️\n\n" + upi);
+                alert(
+                    "UPI ID copied successfully ❤️\n\n" +
+                    upi
+                );
 
             })
             .catch(function() {
 
-                alert("UPI ID: " + upi);
+                alert(
+                    "UPI ID:\n" + upi
+                );
 
             });
 
     } else {
 
-        alert("UPI ID: " + upi);
+        alert(
+            "UPI ID:\n" + upi
+        );
 
     }
+
 }
-
-
-/* START UPI PAYMENT */
-
-```javascript
-function startDonation() {
-
-    const amountInput = document.getElementById("donationAmount");
-    const amount = Number(amountInput.value);
-
-    // Check amount
-    if (!amount || amount <= 0) {
-        alert("Please select or enter a donation amount.");
-        amountInput.focus();
-        return;
-    }
-
-    const upiId = "abhnav.30pandey@oksbi";
-    const payeeName = "Exato Foundation";
-    const note = "Donation to Exato Foundation";
-
-    // Create UPI payment URL
-    const upiUrl =
-        "upi://pay" +
-        "?pa=" + encodeURIComponent(upiId) +
-        "&pn=" + encodeURIComponent(payeeName) +
-        "&am=" + encodeURIComponent(amount.toFixed(2)) +
-        "&cu=INR" +
-        "&tn=" + encodeURIComponent(note);
-
-    // Create temporary UPI link
-    const link = document.createElement("a");
-
-    link.href = upiUrl;
-    link.innerHTML = "Pay";
-
-    // Keep link hidden
-    link.style.display = "none";
-
-    document.body.appendChild(link);
-
-    // Open UPI application
-    link.click();
-
-    // Remove temporary link
-    setTimeout(function () {
-        document.body.removeChild(link);
-    }, 1000);
-}
-```
 
 </script>
 
 {% endblock %}
+```
